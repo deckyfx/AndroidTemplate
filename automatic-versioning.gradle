@@ -1,0 +1,76 @@
+import java.util.regex.Pattern
+
+task incrementVersionCode << {
+    println(":incrementVersionCode - Incrementing Version Code...")
+    def manifestFile = file("src/main/AndroidManifest.xml")
+    newFile = new File("gradle.properties")
+    newFile.createNewFile()
+    def propertiesFile = file(newFile)
+    def patternVersionCode = Pattern.compile("versionCode=\"?(\\d+)\"?")
+    def manifestText = manifestFile.getText()
+    def propertiesText = propertiesFile.getText()
+    def manifestMatcherVersionCode = patternVersionCode.matcher(manifestText)
+    def propertiesMatcherVersionCode = patternVersionCode.matcher(propertiesText)
+    def mVersionCode = 0
+    if (propertiesMatcherVersionCode.find()) {
+        mVersionCode = Integer.parseInt(propertiesMatcherVersionCode.group(1))
+    }
+    def mNextVersionCode = mVersionCode + 1
+    def manifestContent = manifestMatcherVersionCode.replaceAll("versionName=\"" + mNextVersionName + "\"")
+    def propertiesContent = propertiesMatcherVersionCode.replaceAll("versionName=" + mNextVersionName)
+    println(":incrementVersionCode - current versionCode=" + mVersionCode);
+    println(":incrementVersionCode - next versionCode=" + mNextVersionCode);
+    manifestFile.write(manifestContent)
+    propertiesFile.write(propertiesContent)
+}
+
+task incrementVersionName << {
+    println(":incrementVersionName - Incrementing Version Name...")
+    def manifestFile = file("src/main/AndroidManifest.xml")
+    newFile = new File("gradle.properties")
+    newFile.createNewFile()
+    def propertiesFile = file(newFile)
+    def patternVersionNumber = Pattern.compile("versionName=\"?(\\d+)\\.(\\d+)\\.(\\d+)\"?")
+    def manifestText = manifestFile.getText()
+    def propertiesText = propertiesFile.getText()
+    def manifestMatcherVersionNumber = patternVersionNumber.matcher(manifestText)
+    def propertiesMatcherVersionNumber = patternVersionNumber.matcher(propertiesText)
+    def majorVersion = 0
+    def minorVersion = 0
+    def pointVersion = 0
+    if (propertiesMatcherVersionNumber.find()) {
+        majorVersion = Integer.parseInt(propertiesMatcherVersionNumber.group(1))
+        minorVersion = Integer.parseInt(propertiesMatcherVersionNumber.group(2))
+        pointVersion = Integer.parseInt(propertiesMatcherVersionNumber.group(3))
+    }
+    def mVersionName = majorVersion + "." + minorVersion + "." + pointVersion
+    def mNextVersionName = majorVersion + "." + minorVersion + "." + (pointVersion + 1)
+    def manifestContent = manifestMatcherVersionNumber.replaceAll("versionName=\"" + mNextVersionName + "\"")
+    def propertiesContent = propertiesMatcherVersionNumber.replaceAll("versionName=" + mNextVersionName)
+    println(":incrementVersionName - current versionName=" + mVersionName);
+    println(":incrementVersionName - new versionName=" + mNextVersionName);
+    manifestFile.write(manifestContent)
+    propertiesFile.write(propertiesContent)
+}
+
+task release << {
+    println(":release - Build and Version Increment")
+}
+
+task debug << {
+    println(":debug - Build")
+}
+
+tasks.whenTaskAdded { task ->
+    //println("- " + task.name)
+    if (task.name == 'bundleRelease'){
+        task.dependsOn 'generateDebugBuildConfig'
+    }
+    if (task.name == 'generateDebugBuildConfig'){
+        task.dependsOn 'incrementVersionName'
+    }
+    if (task.name == 'generatePomFileForAndroidUtilitiesPublication'){
+        //task.dependsOn 'generateDebugBuildConfig'
+        //task.dependsOn 'incrementVersionName'
+    }
+}

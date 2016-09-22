@@ -3,9 +3,7 @@ import java.util.regex.Pattern
 task incrementVersionCode << {
     println(":incrementVersionCode - Incrementing Version Code...")
     def manifestFile = file("src/main/AndroidManifest.xml")
-    def newFile = new File("gradle.properties")
-    newFile.createNewFile()
-    def propertiesFile = file(newFile)
+    def propertiesFile = new File("${project.rootDir}/gradle.properties")
     def patternVersionCode = Pattern.compile("versionCode=\"?(\\d+)\"?")
     def manifestText = manifestFile.getText()
     def propertiesText = propertiesFile.getText()
@@ -27,9 +25,7 @@ task incrementVersionCode << {
 task incrementVersionName << {
     println(":incrementVersionName - Incrementing Version Name...")
     def manifestFile = file("src/main/AndroidManifest.xml")
-    def newFile = new File("gradle.properties")
-    newFile.createNewFile()
-    def propertiesFile = file(newFile)
+    def propertiesFile = new File("${project.rootDir}/gradle.properties")
     def patternVersionNumber = Pattern.compile("versionName=\"?(\\d+)\\.(\\d+)\\.(\\d+)\"?")
     def manifestText = manifestFile.getText()
     def propertiesText = propertiesFile.getText()

@@ -4,6 +4,7 @@ task incrementVersionCode << {
     println(":incrementVersionCode - Incrementing Version Code...")
     def manifestFile = file("src/main/AndroidManifest.xml")
     def propertiesFile = new File("${project.projectDir}/gradle.properties")
+    propertiesFile.createNewFile()
     def patternVersionCode = Pattern.compile("versionCode=\"?(\\d+)\"?")
     def manifestText = manifestFile.getText()
     def propertiesText = propertiesFile.getText()
@@ -14,8 +15,12 @@ task incrementVersionCode << {
         mVersionCode = Integer.parseInt(propertiesMatcherVersionCode.group(1))
     }
     def mNextVersionCode = mVersionCode + 1
-    def manifestContent = manifestMatcherVersionCode.replaceAll("versionName=\"" + mNextVersionName + "\"")
-    def propertiesContent = propertiesMatcherVersionCode.replaceAll("versionName=" + mNextVersionName)
+    def manifestContent = ''
+    if (propertiesMatcherVersionCode.find()) {
+        propertiesContent = propertiesMatcherVersionCode.replaceAll("versionCode=" + mNextVersionCode)
+    } else {
+        propertiesContent = "versionName=" + mNextVersionName + "\n" + "versionCode=0"
+    }
     println(":incrementVersionCode - current versionCode=" + mVersionCode);
     println(":incrementVersionCode - next versionCode=" + mNextVersionCode);
     manifestFile.write(manifestContent)
@@ -26,6 +31,8 @@ task incrementVersionName << {
     println(":incrementVersionName - Incrementing Version Name...")
     def manifestFile = file("src/main/AndroidManifest.xml")
     def propertiesFile = new File("${project.projectDir}/gradle.properties")
+    propertiesFile.createNewFile()
+    println(propertiesFile)
     def patternVersionNumber = Pattern.compile("versionName=\"?(\\d+)\\.(\\d+)\\.(\\d+)\"?")
     def manifestText = manifestFile.getText()
     def propertiesText = propertiesFile.getText()
@@ -42,7 +49,12 @@ task incrementVersionName << {
     def mVersionName = majorVersion + "." + minorVersion + "." + pointVersion
     def mNextVersionName = majorVersion + "." + minorVersion + "." + (pointVersion + 1)
     def manifestContent = manifestMatcherVersionNumber.replaceAll("versionName=\"" + mNextVersionName + "\"")
-    def propertiesContent = propertiesMatcherVersionNumber.replaceAll("versionName=" + mNextVersionName)
+    def propertiesContent = ''
+    if (propertiesMatcherVersionNumber.find()) {
+        propertiesContent = propertiesMatcherVersionNumber.replaceAll("versionName=" + mNextVersionName)
+    } else {
+        propertiesContent = "versionName=" + mNextVersionName + "\n" + "versionCode=0"
+    }
     println(":incrementVersionName - current versionName=" + mVersionName);
     println(":incrementVersionName - new versionName=" + mNextVersionName);
     manifestFile.write(manifestContent)

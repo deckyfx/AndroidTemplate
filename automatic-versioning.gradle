@@ -1,3 +1,8 @@
+// Automatic versioning, how to use
+//def INCREASE_VERSION_NAME_WHEN_RUN_TASK = "build"
+//def INCREASE_VERSION_CODE_WHEN_RUN_TASK = ""
+//apply from: 'https://raw.githubusercontent.com/deckyfx/AndroidTemplate/master/automatic-versioning.gradle'
+
 import java.util.regex.Pattern
 
 task incrementVersionCode << {
@@ -70,7 +75,6 @@ task debug << {
 }
 
 tasks.whenTaskAdded { task ->
-    println("- " + task.name)
     if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
         if (task.name == INCREASE_VERSION_NAME_WHEN_RUN_TASK){
             task.dependsOn 'generateDebugBuildConfig'

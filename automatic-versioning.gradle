@@ -70,15 +70,19 @@ task debug << {
 }
 
 tasks.whenTaskAdded { task ->
-    //println("- " + task.name)
-    if (task.name == 'bundleRelease'){
-        task.dependsOn 'generateDebugBuildConfig'
+    println("- " + task.name)
+    if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
+        if (task.name == INCREASE_VERSION_NAME_WHEN_RUN_TASK){
+            task.dependsOn 'generateDebugBuildConfig'
+        }
+    } else {
+        if (task.name == 'generateDebugBuildConfig'){
+            task.dependsOn 'incrementVersionName'
+        }
     }
-    if (task.name == 'generateDebugBuildConfig'){
-        task.dependsOn 'incrementVersionName'
-    }
-    if (task.name == 'generatePomFileForAndroidUtilitiesPublication'){
-        //task.dependsOn 'generateDebugBuildConfig'
-        //task.dependsOn 'incrementVersionName'
+    if (binding.variables.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
+        if (task.name == INCREASE_VERSION_CODE_WHEN_RUN_TASK){
+            task.dependsOn 'incrementVersionCode'
+        }
     }
 }

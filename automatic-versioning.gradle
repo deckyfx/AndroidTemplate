@@ -96,4 +96,4 @@ if (binding.variables.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
     } else {
         println("Task " + ":" + project.name + ":" + taskName + " not found to increase version name");
     }
-}
+} 

@@ -83,7 +83,7 @@ if (ext.properties.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
 }
 foundTask = tasks.findByPath(taskName)
 if (foundTask != null) {
-    task.dependsOn 'incrementVersionName'
+    foundTask.dependsOn 'incrementVersionName'
 } else {
     println("Task " + taskName + " not found to increase version name");
 }
@@ -92,7 +92,7 @@ if (ext.properties.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
     taskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_CODE_WHEN_RUN_TASK')
     foundTask = tasks.findByPath(taskName)
     if (foundTask != null) {
-        task.dependsOn 'incrementVersionCode'
+        foundTask.dependsOn 'incrementVersionCode'
     } else {
         println("Task " + ":" + project.name + ":" + taskName + " not found to increase version name");
     }

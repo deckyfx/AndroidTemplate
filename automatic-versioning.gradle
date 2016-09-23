@@ -74,22 +74,23 @@ task debug << {
     println(":debug - Build")
 }
 
-tasks.whenTaskAdded { task ->
-    println(task.name)
-    if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
-        println("!!!!!!!!!!")
-        if (task.name == INCREASE_VERSION_NAME_WHEN_RUN_TASK){
-            task.dependsOn 'generateDebugBuildConfig'
-        }
+def foundTask = null
+if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
+    foundTask = tasks.findByPath(":" + project.name + ":" + INCREASE_VERSION_NAME_WHEN_RUN_TASK)
+} else {
+    foundTask = tasks.findByPath(":" + project.name + ":" + 'generateDebugBuildConfig')
+}
+if (foundTask != null) {
+    task.dependsOn 'incrementVersionName'
+} else {
+    println("Task " + ":" + project.name + ":" + INCREASE_VERSION_NAME_WHEN_RUN_TASK + " not found to increase version name");
+}
+
+if (binding.variables.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
+    foundTask = tasks.findByPath(":" + project.name + ":" + INCREASE_VERSION_CODE_WHEN_RUN_TASK)
+    if (foundTask != null) {
+        task.dependsOn 'incrementVersionCode'
     } else {
-        println("??????????")
-        if (task.name == 'generateDebugBuildConfig'){
-            task.dependsOn 'incrementVersionName'
-        }
-    }
-    if (binding.variables.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
-        if (task.name == INCREASE_VERSION_CODE_WHEN_RUN_TASK){
-            task.dependsOn 'incrementVersionCode'
-        }
+        println("Task " + ":" + project.name + ":" + INCREASE_VERSION_CODE_WHEN_RUN_TASK + " not found to increase version name");
     }
 }

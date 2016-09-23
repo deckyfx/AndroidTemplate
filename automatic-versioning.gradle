@@ -1,6 +1,6 @@
 // Automatic versioning, how to use
-//def INCREASE_VERSION_NAME_WHEN_RUN_TASK = "build"
-//def INCREASE_VERSION_CODE_WHEN_RUN_TASK = ""
+//ext.INCREASE_VERSION_NAME_WHEN_RUN_TASK = "build"
+//ext.INCREASE_VERSION_CODE_WHEN_RUN_TASK = ""
 //apply from: 'https://raw.githubusercontent.com/deckyfx/AndroidTemplate/master/automatic-versioning.gradle'
 
 import java.util.regex.Pattern
@@ -76,8 +76,8 @@ task debug << {
 
 def foundTask = null
 def taskName = ""
-if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
-    taskName = ":" + project.name + ":" + INCREASE_VERSION_NAME_WHEN_RUN_TASK
+if (ext.properties.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
+    taskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_NAME_WHEN_RUN_TASK')
 } else {
     taskName = ":" + project.name + ":" + 'generateDebugBuildConfig'
 }
@@ -88,12 +88,12 @@ if (foundTask != null) {
     println("Task " + taskName + " not found to increase version name");
 }
 
-if (binding.variables.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
-    taskName = ":" + project.name + ":" + INCREASE_VERSION_CODE_WHEN_RUN_TASK
+if (ext.properties.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
+    taskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_CODE_WHEN_RUN_TASK')
     foundTask = tasks.findByPath(taskName)
     if (foundTask != null) {
         task.dependsOn 'incrementVersionCode'
     } else {
         println("Task " + ":" + project.name + ":" + taskName + " not found to increase version name");
     }
-} 
+}

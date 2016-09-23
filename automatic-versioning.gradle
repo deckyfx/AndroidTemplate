@@ -75,11 +75,14 @@ task debug << {
 }
 
 tasks.whenTaskAdded { task ->
+    println(task.name)
     if (binding.variables.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
+        println("!!!!!!!!!!")
         if (task.name == INCREASE_VERSION_NAME_WHEN_RUN_TASK){
             task.dependsOn 'generateDebugBuildConfig'
         }
     } else {
+        println("??????????")
         if (task.name == 'generateDebugBuildConfig'){
             task.dependsOn 'incrementVersionName'
         }

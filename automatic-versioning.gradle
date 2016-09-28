@@ -82,7 +82,7 @@ if (ext.properties.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
 } else {
     versionNameTaskName = ":" + project.name + ":" + 'generateDebugBuildConfig'
 }
-versionNameTask = tasks.findByPath(versionNameTask)
+versionNameTask = tasks.findByPath(versionNameTaskName)
 if (versionNameTask != null) {
     versionNameTask.dependsOn 'incrementVersionName'
 }

@@ -1,7 +1,7 @@
 // Automatic versioning, how to use
 //ext.INCREASE_VERSION_NAME_WHEN_RUN_TASK = "build"
 //ext.INCREASE_VERSION_CODE_WHEN_RUN_TASK = ""
-//apply from: 'https://raw.githubusercontent.com/deckyfx/AndroidTemplate/master/automatic-versioning.gradle'
+//apply from: 'https://cdn.rawgit.com/deckyfx/AndroidTemplate/master/automatic-versioning.gradle'
 
 import java.util.regex.Pattern
 
@@ -39,7 +39,6 @@ task incrementVersionName << {
     manifestFile.createNewFile()
     def propertiesFile = new File("${project.projectDir}/gradle.properties")
     propertiesFile.createNewFile()
-    println(propertiesFile)
     def patternVersionNumber = Pattern.compile("versionName=\"?(\\d+)\\.(\\d+)\\.(\\d+)\"?")
     def manifestText = manifestFile.getText()
     def propertiesText = propertiesFile.getText()
@@ -76,26 +75,35 @@ task debug << {
     println(":debug - Build")
 }
 
-def foundTask = null
-def taskName = ""
+def versionNameTask = null
+def versionNameTaskName = ""
 if (ext.properties.containsKey('INCREASE_VERSION_NAME_WHEN_RUN_TASK')) {
-    taskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_NAME_WHEN_RUN_TASK')
+    versionNameTaskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_NAME_WHEN_RUN_TASK')
 } else {
-    taskName = ":" + project.name + ":" + 'generateDebugBuildConfig'
+    versionNameTaskName = ":" + project.name + ":" + 'generateDebugBuildConfig'
 }
-foundTask = tasks.findByPath(taskName)
-if (foundTask != null) {
-    foundTask.dependsOn 'incrementVersionName'
-} else {
-    println("Task " + taskName + " not found to increase version name");
+versionNameTask = tasks.findByPath(versionNameTask)
+if (versionNameTask != null) {
+    versionNameTask.dependsOn 'incrementVersionName'
 }
 
+def versionCodeTask = null
+def versionCodeTaskName = ""
 if (ext.properties.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
-    taskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_CODE_WHEN_RUN_TASK')
-    foundTask = tasks.findByPath(taskName)
-    if (foundTask != null) {
-        foundTask.dependsOn 'incrementVersionCode'
-    } else {
-        println("Task " + ":" + project.name + ":" + taskName + " not found to increase version name");
+    versionCodeTaskName = ":" + project.name + ":" + ext.get('INCREASE_VERSION_CODE_WHEN_RUN_TASK')
+    versionCodeTask = tasks.findByPath(versionCodeTaskName)
+    if (versionCodeTask != null) {
+        versionCodeTask.dependsOn 'incrementVersionCode'
+    }
+} else {
+    versionCodeTaskName = "";
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == versionNameTaskName) {
+        task.dependsOn('incrementVersionName');
+    }
+    if (versionCodeTaskName.length() > 0 && task.name == versionCodeTaskName) {
+        task.dependsOn('incrementVersionCode');
     }
 }

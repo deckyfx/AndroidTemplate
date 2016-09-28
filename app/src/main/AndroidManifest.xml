@@ -4,7 +4,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.deckyfx.androidtemplate"
     android:versionCode="0"
-    android:versionName="0.0.0">
+    android:versionName="0.0.2">
 
     <!-- Add your permissions here -->
     <uses-permission android:name="android.permission.INTERNET" />

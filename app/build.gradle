@@ -32,4 +32,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0-beta1'
 
     compile 'com.github.1412:androidutilities:0.0.1@aar'
+    compile 'de.greenrobot:greendao:1.3.7'
+    compile 'de.greenrobot:eventbus:2.4.0'
 }

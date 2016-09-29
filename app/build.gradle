@@ -23,6 +23,7 @@ android {
 
 // Automatic versioning
 apply from: 'https://cdn.rawgit.com/deckyfx/AndroidTemplate/master/automatic-versioning.gradle'
+// Automatic sqilite management
 apply from: 'https://cdn.rawgit.com/deckyfx/gdgen/master/gdgen.gradle'
 
 dependencies {

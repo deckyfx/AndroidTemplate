@@ -5,6 +5,8 @@
 
 import java.util.regex.Pattern
 
+
+
 task incrementVersionCode << {
     println(":incrementVersionCode - Incrementing Version Code...")
     def manifestFile = new File("${project.projectDir}/src/main/AndroidManifest.xml")
@@ -100,10 +102,10 @@ if (ext.properties.containsKey('INCREASE_VERSION_CODE_WHEN_RUN_TASK')) {
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name == versionNameTaskName) {
+    if (task.path == versionNameTaskName) {
         task.dependsOn('incrementVersionName');
     }
-    if (versionCodeTaskName.length() > 0 && task.name == versionCodeTaskName) {
+    if (versionCodeTaskName.length() > 0 && task.path == versionCodeTaskName) {
         task.dependsOn('incrementVersionCode');
     }
 }
